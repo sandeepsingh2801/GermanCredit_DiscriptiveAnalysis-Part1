@@ -1,0 +1,46 @@
+install.packages("dplyr")
+library(dplyr)
+#reading the csv file
+GermanCredit_CSV <- read.csv("C:\\Users\\sandy\\OneDrive\\Documents\\UIC\\Fall\\DataMining\\Data mining_Nigar\\German Credit.csv")
+attach(GermanCredit_CSV)
+#converting into a table class
+tbl_GermanCredit_CSV<-tbl_df(GermanCredit_CSV)
+#viewing the table
+glimpse(tbl_GermanCredit_CSV)
+glimpse(GermanCredit_CSV)
+#aggregation using a specific column
+amount<- group_by(GermanCredit_CSV,RESPONSE)
+
+#avg value w.r.t to the response
+avg_amount<- summarise(amount,Avg_Amount=mean(AMOUNT))
+arrange(avg_amount,Avg_Amount)
+#piping Passes object on lef hand side as first argument (or .
+#argument) of function on righthand side.
+#"Piping" with %>% makes code more readable, e.g.
+#x %>% f(y) is the same as f(x, y)
+tbl_GermanCredit_CSV%>%
+  group_by(RESPONSE)%>%
+  summarise(Avg_Amount=mean(AMOUNT))%>%
+  arrange(Avg_Amount)
+#frequency count w.r.t to response employment and education
+agg<-group_by(GermanCredit_CSV,EMPLOYMENT,EDUCATION,RESPONSE)
+freqs<-summarise(agg,n())
+#subsetting the data set
+subset<-filter(GermanCredit_CSV,EMPLOYMENT==4)
+#select columns
+select=select(GermanCredit_CSV,EMPLOYMENT)
+#select distinct
+select=distinct(select(GermanCredit_CSV,EMPLOYMENT))
+#sorting the data in a ascending order
+GermanCredit_CSV<-arrange(GermanCredit_CSV,EMPLOYMENT)
+GermanCredit_CSV<-arrange(GermanCredit_CSV,desc(EMPLOYMENT))
+#add a computed column
+Mutated_GermanCredit_CSV<-mutate(GermanCredit_CSV,AMOUNT_MUTATED=AMOUNT+100 )
+names(Mutated_GermanCredit_CSV)
+#seeing the frequency
+table(EMPLOYMENT,RESPONSE)
+#row percentages
+prop.table(table(EMPLOYMENT,RESPONSE),1)
+#columne percentages
+prop.table(table(EMPLOYMENT,RESPONSE),2)
+
